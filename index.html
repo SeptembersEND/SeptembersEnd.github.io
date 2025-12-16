@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>September Has Ended</title>
+		<link rel="icon" type="image/png" size="32x32" href="./img/favicon-32x32.png">
+		<!-- <https://lospec.com/palette-list/ink-crimson> -->
+		<!-- <https://lospec.com/palette-list/cybergum6> -->
+		<!-- <https://lospec.com/palette-list/sega-genesis-evangelion> -->
+
+		<script src="./js/kbpgp-2.1.0-min.js"></script>
+		<script src="./js/contact.js"></script>
+		<script src="./js/updated.js"></script>
+		<link rel="stylesheet" type="text/css" href="./css/contact.css">
+		<style>
+body {
+	background-color: #cfc9b3;
+	font-family: monospace;
+}
+@keyframes shake {
+	0%		{ transform: rotate(10deg); }
+	15%		{ transform: rotate(-10deg); }
+	30%		{ transform: rotate(14deg); }
+	60%		{ transform: rotate(0deg); }
+	75%		{ transform: rotate(10deg); }
+	100%	{ transform: rotate(0deg); }
+}
+@keyframes breathe {
+	0% { transform: scale(1); }
+	75% { transform: scale(1.15); }
+	100% { transform: scale(1); }
+}
+
+#main {
+	padding: 1%;
+	width: 100%;
+	place-items: center;
+}
+#main-hold {
+	background-color: #a3b49e;
+	padding: 1em;
+}
+#main-sobj {
+	border: 2px solid #140e0b;
+	margin: 0.3%;
+	float: left;
+	background-color: #cbd8f6;
+	width: 27.3%;
+	padding: 1.0%;
+}
+#main-obj {
+	border: 2px solid #140e0b;
+	margin: 0.3%;
+	float: left;
+	text-align: left;
+	padding: 1%;
+	background-color: #cbd8f6;
+	width: 35%;
+}
+
+#username {
+	padding: 1em;
+	font-size: 1.2rem;
+	font-family: "Courier New", monospace;
+	animation: breathe 48s infinite;
+}
+#avatar {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+
+	border-width: 0.3em;
+	border-style: solid;
+	border-color: #64a6ae;
+
+	transition: all ease-in-out;
+	width: 60%;
+	border-radius: 500px;
+	-webkit-border-radius: 500px;
+	-moz-border-radius: 500px;
+}
+#page-title {
+	color:#ba2f4a;
+	padding:1em;
+	animation: breathe 16s infinite;
+}
+
+.mono {
+	font-family: "Courier New", monospace;
+}
+		</style>
+	</head>
+	<body>
+		<div id="main">
+			<big><div align="center" id="page-title">Hello</div></big>
+			<div id="main-sobj">
+				<!--<iframe width="100%" height="100%"
+					src="./simplepgp.html"></iframe>
+				<object type="text/html" data="./simplepgp.html"></object>
+				-->
+				<div id="msg-id">
+					<a align="center" href="./" class="mono">Contact Me</a>
+					<button type="button" id="idbutton" style="width: 20px; height: 20px; text-"
+						onclick="forceGetData();"><img src="./img/reload.png" class="reload"><span></button>
+					<br />
+					<textarea stype="message" id="text-input"></textarea><br />
+					<button type="button" id="idbutton" onclick="sendData();">SEND</button>
+					<div id="msg-id-color"></div>
+				</div>
+				<script>
+					getData();
+					getKeys();
+					if (gerrors == true) {
+						run(main_key);
+					}
+				</script>
+			</div>
+			<div id="main-obj">
+				<div id="main-hold">
+					<br />
+					[<a href="./docs/25-345--0.pdf">PDF</a>] CVE-2025-55182(React2Shell) an Analysis<br />
+					<div style="display:flex">
+						<div>
+							[<a href="./docs/25-350--0.pdf">PDF</a>]
+						</div>
+						<div>
+							<details>
+								<summary>Github Contribution History Graffiti</summary>
+								<p>
+									This is a very simple stupid history graffiti program. This
+									means and allows you to put text and put "Graffiti" on your
+									github contribution history.
+								</p>
+								[<a href="https://github.com/SeptembersEND/github-history-graffiti">REPO</a>] Github History Graffiti<br />
+							</details>
+						</div>
+					</div>
+					[<a href="./docs/25-344--0.pdf">PDF</a>] How to bypass Windows OOBE-NRO (as of Dec 2025)<br />
+					[<a href="./docs/25-320--0.pdf">PDF</a>] Installing Linux On A Chromebook<br />
+					[<a href="./docs/25-358--0.pdf">PDF</a>] Creating a SSH Tunel using TUN interfaces<br />
+					<br />
+
+					<div id="build-status"></div>
+					<script>getGithubStatus();</script>
+				</div>
+			</div>
+			<div id="main-sobj">
+				<a href="https://github.com/SeptembersEND" style="text-decoration:none">
+					<script>
+					function replaceavatar() {
+						const a = document.getElementById("avatar");
+						a.src="./img/profile.gif";
+						<!-- https://thewebdev.info/2022/03/26/how-to-reset-a-gif-animation-with-javascript-2/ -->
+						<!-- http://superuser.com/questions/1607099/ddg#1607134 -->
+						a.src = `${a.src.replace(/\?.*$/,"")}?x=${Math.random()}`
+					}
+					function normalavatar() {
+						document.getElementById("avatar").src="./img/profile.jpg";
+					}
+					</script>
+					<img id="avatar"
+							 onmouseover='replaceavatar()'
+							 onmouseout='normalavatar()'
+						src="./img/profile.jpg">
+					<center id="username"><span
+							style="color:#831961;">Septembers</span><span
+							style="color:#ba2f4a;">END</span></center>
+					<br />
+				</a>
+
+			</div>
+		</div>
+	</body>
+</html>
+<!-- vim: shiftwidth=2 tabstop=2
