@@ -1,0 +1,53 @@
+#text-input {
+	height: 4em;
+	width: 50%;
+	margin: 0.5em;
+	background-color: #cfc9b3;
+}
+#idbutton {
+	margin: 0.25em;
+	padding: 0.25em;
+	background-color: #64a6ae;
+	color: black;
+	border: none;
+}
+#idbutton:hover {
+	margin: 0.25em;
+	padding: 0.25em;
+	background-color: #a3b49e;
+	color: black;
+	border: none;
+}
+.reload {
+	font-size: 12px;
+	width: 11px;
+	height: 11px;
+	transition: all 0.4s ease-in-out;
+}
+@keyframes reloaded {
+	5% { transform: rotate(380deg) scale(1.5);}
+	50% { transform: rotate(400deg) scale(1.25);}
+	100% { transform: rotate(360deg) scale(1);}
+}
+.reload:hover {
+	animation: reloaded 3s both;
+}
+
+#msg-id {
+	text-align: center;
+	justify-content: center;
+	place-items: center;
+	position: relative;
+}
+#msg-id-color {
+	background-color: #cbd8f6;
+	padding: 1em;
+}
+#msg-id-num {
+	text-align: left;
+	color: blueviolet;
+	padding: 0.25em;
+}
+#msg-id-num {
+	background-color: #a3b49e;
+}

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- <https://www.w3docs.com/snippets/css/how-to-hide-elements-in-a-responsive-layout.html> -->
+		<meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1, user-scalable=no" />
+		<!-- <https://developers.google.com/search/docs/crawling-indexing/block-indexing> -->
+		<meta name="robots" content="noindex, nofollow" />
+
+
+		<title>September Has Ended</title>
+		<link rel="icon" type="image/png" size="32x32" href="./img/favicon-32x32.png">
+		<!-- <https://lospec.com/palette-list/ink-crimson> -->
+		<!-- <https://lospec.com/palette-list/cybergum6> -->
+		<!-- <https://lospec.com/palette-list/sega-genesis-evangelion> -->
+
+		<script src="./js/kbpgp-2.1.0-min.js"></script>
+		<script src="./js/contact.js"></script>
+		<script src="./js/updated.js"></script>
+		<link rel="stylesheet" type="text/css" href="./css/contact.css">
+
+		<!-- index style {{{ TODO: fix moving to css file break everything?-->
+		<style>
+			body {
+				background-color: #cfc9b3;
+				font-family: monospace;
+			}
+			@keyframes shake {
+				0%		{ transform: rotate(10deg); }
+				15%		{ transform: rotate(-10deg); }
+				30%		{ transform: rotate(14deg); }
+				60%		{ transform: rotate(0deg); }
+				75%		{ transform: rotate(10deg); }
+				100%	{ transform: rotate(0deg); }
+			}
+			@keyframes breathe {
+				0% { transform: scale(1); }
+				75% { transform: scale(1.15); }
+				100% { transform: scale(1); }
+			}
+
+			#main {
+				width: 100%;
+				place-items: center;
+			}
+
+			#container {
+				display: grid;
+				grid-template-columns: 25% auto 25%;
+				height: 100%;
+				min-height: 100%;
+				grid-template-rows: auto;
+				gap: 2%;
+				padding: 4%;
+				padding-top: 1%;
+			}
+
+			#main-hold {
+				background-color: #a3b49e;
+				padding: 1em;
+			}
+			#main-sobj {
+				border: 2px solid #140e0b;
+				background-color: #cbd8f6;
+				padding: 8.0%;
+			}
+			#main-obj {
+				border: 2px solid #140e0b;
+				text-align: left;
+				padding: 2%;
+				background-color: #cbd8f6;
+			}
+
+			#link {
+				text-decoration: none;
+				color: #ba2f4a;
+			}
+
+			#username {
+				padding: 1em;
+				font-size: 95%;
+				font-family: "Courier New", monospace;
+				animation: breathe 48s infinite;
+			}
+			#avatar {
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+
+				border-width: 0.3em;
+				border-style: solid;
+				border-color: #64a6ae;
+
+				transition: all ease-in-out;
+				width: 60%;
+				border-radius: 500px;
+				-webkit-border-radius: 500px;
+				-moz-border-radius: 500px;
+			}
+			#page-title {
+				color:#ba2f4a;
+				padding-top: 2%;
+				font-size: 0.75vw;
+				text-align: center;
+			}
+
+			.mono {
+				font-family: "Courier New", monospace;
+			}
+
+			@media (max-width: 767px) {
+				.nomobile {
+					display: none;
+				}
+			}
+
+			.ticker-hold {
+				height: 10vh;
+			}
+		</style><!-- }}} -->
+
+		<!-- <https://stackoverflow.com/questions/10769016/display-image-on-text-link-hover-css-only> -->
+	</head>
+	<body>
+		<div id="main">
+			<div id="page-title">Hello</div>
+			<div id="container">
+				<div id="main-sobj">
+					<div id="msg-id">
+						<a align="center" href="./" class="mono">Contact Me</a>
+						<button type="button" id="idbutton" style="width: 20px; height: 20px;" onclick="forceGetData();">
+							<img src="./img/reload.png" class="reload">
+						</button>
+						<br />
+						<textarea stype="message" id="text-input"></textarea><br />
+						<button type="button" id="idbutton" onclick="sendData();">SEND</button>
+						<div id="msg-id-color"></div>
+					</div>
+				</div>
+				<div id="main-obj">
+					<div id="main-hold">
+						<br />
+						[<a href="./docs/25-345--0.pdf" id="link">PDF</a>] CVE-2025-55182(React2Shell) an Analysis<br />
+						<div style="display:flex"> <!-- 25-365--0 {{{ -->
+							<div>
+								[<a href="./docs/25-350--0.pdf" id="link">PDF</a>]
+							</div>
+							<div>
+								<details>
+									<summary>Github Contribution History Graffiti</summary>
+									<p>
+										This is a very simple stupid history graffiti program. This
+										means and allows you to put text and put "Graffiti" on your
+										github contribution history.
+									</p>
+									<a href="https://github.com/SeptembersEND">
+										<img src="./img/25-350--0/result.png" style="width: 94%;
+														border-radius: 1em; border: 0.2em solid #140e0b"/>
+									</a>
+									[<a
+										href="https://github.com/SeptembersEND/github-history-graffiti"
+										id="link">REPO</a>] Github History Graffiti<br />
+									<br />
+								</details>
+							</div>
+						</div> <!-- }}} -->
+						[<a href="./docs/25-344--0.pdf" id="link">PDF</a>] How to bypass Windows OOBE-NRO (as of Dec 2025)<br />
+						[<a href="./docs/25-320--0.pdf" id="link">PDF</a>] Installing Linux On A Chromebook<br />
+						[<a href="./docs/25-358--0.pdf" id="link">PDF</a>] Creating a SSH Tunel using TUN interfaces<br />
+						<div style="display:flex"> <!-- 25-365--0 {{{ -->
+							<div>
+								[<a href="./docs/25-365--0.pdf" id="link">PDF</a>]
+							</div>
+							<div>
+								<div style="display: grid">
+									<details>
+										<summary>Sorting an image based on pixel values</summary>
+										<p>
+											This is a simple project that dives into the basics of raw
+											image manipulation, by sorting the pixels within an image,
+											based on brightness.
+										</p>
+										<div style="width: 25%; float: left; padding-right: 6em;
+											padding-top: 1.5em">
+											[<a
+												href="https://github.com/SeptembersEND/sortcat"
+												id="link">REPO</a>] Sort[a] Cat<br />
+										</div>
+										<div style="width: 25%; float: left;" class="nomobile">
+											<center>
+												<b><span id="25-365--0text1"> [ UNSORTED ] </span></b>
+												<br />
+												<img src="./img/25-365--0/cyber.jpg" width="128" height="192"
+													style="border: 0.5em solid #000"
+													onmouseover='this.src="./img/25-365--0/cybersorted.jpg";
+													 document.getElementById("25-365--0text1").textContent=" [ SORTED ] ";'
+													onmouseout='this.src="./img/25-365--0/cyber.jpg";
+													 document.getElementById("25-365--0text1").textContent=" [ UNSORTED ] ";' />
+											</center>
+										</div>
+										<div style="width: 35%; float: left;" class="nomobile">
+											<center>
+												<b><span id="25-365--0text2"> [ UNSORTED ] </span></b>
+												<br />
+												<img src="./img/25-365--0/cat.jpg" width="128" height="128"
+													style="border: 0.5em solid #000"
+													onmouseover='this.src="./img/25-365--0/catsorted.jpg";
+													 document.getElementById("25-365--0text2").textContent=" [ SORTED ] ";'
+													onmouseout='this.src="./img/25-365--0/cat.jpg";
+													 document.getElementById("25-365--0text2").textContent=" [ UNSORTED ] ";' />
+											</center>
+										</div>
+									</div>
+								</details>
+							</div>
+						</div> <!-- }}} -->
+						[<a href="./docs/26-022--0.pdf" id="link">PDF</a>] Setting up Metasploitable3 <br />
+						[<a href="./docs/26-033--0.pdf" id="link">PDF</a>] CVE-2026-24061 (InetUtils telnetd) an Analysis<br />
+						<div style="display:flex"> <!-- 25-365--0 {{{ -->
+							<div>
+								[<a href="./docs/26-037--0.pdf" id="link">PDF</a>]
+							</div>
+							<div>
+								<details>
+									<summary>Methods of Acheiving A Graphical Remote Desktop</summary>
+									<p>
+										A entry in
+										<a href="https://github.com/SeptembersEND/transcripts_from_the_ether">transcripts from the ether</a>,
+										that goes into what protocols and software are available for remote desktop sessions.
+									</p>
+									[<a
+										href="https://github.com/SeptembersEND/transcripts_from_the_ether"
+										id="link">REPO</a>] Transcripts From The Ether<br />
+									[<a
+										href="https://github.com/SeptembersEND/transcripts_from_the_ether/blob/main/RemoteDesktops/remote-desktops.md"
+										id="link">ENTRY</a>] Remote Desktops Entry<br />
+									<br />
+								</details>
+							</div>
+						</div> <!-- }}} -->
+						<br />
+
+						<div id="build-status"></div>
+						<script>getGithubStatus();</script>
+					</div>
+				</div>
+
+
+				<div id="main-sobj">
+					<!--https://bytegoblin.io/blog/remove-underline-from-link-using-css-->
+					<a href="https://github.com/SeptembersEND" style="text-decoration:none">
+						<script>
+						function replaceavatar() {
+							const a = document.getElementById("avatar");
+							a.src="./img/profile.gif";
+							<!-- https://thewebdev.info/2022/03/26/how-to-reset-a-gif-animation-with-javascript-2/ -->
+							<!-- http://superuser.com/questions/1607099/ddg#1607134 -->
+							a.src = `${a.src.replace(/\?.*$/,"")}?x=${Math.random()}`
+						}
+						function normalavatar() {
+							document.getElementById("avatar").src="./img/profile.jpg";
+						}
+						</script>
+						<img id="avatar"
+								 onmouseover='replaceavatar()'
+								 onmouseout='normalavatar()'
+							src="./img/profile.jpg">
+						<center id="username"><span
+								style="color:#831961;">Septembers</span><span
+								style="color:#ba2f4a;">END</span>
+						</center>
+					</a>
+
+					<div align="left">
+						<a href="http://www.linkedin.com/in/evan-r-76445b39a" title="Its Sadly Necessary">LinkedIn</a>
+					</div>
+					<br />
+
+					<p align="right">
+						"Specialization is for insects"<br />
+						<a href="https://en.wikiquote.org/wiki/Time_Enough_for_Love"
+							style="text-decoration: none" id="link">Time Enough for Love</a> - Robert A. Heinlein
+					</p>
+
+					<div class="ticker-hold">
+					</div>
+					<div class="ticker" style="text-align: right;">
+						#<a id="ticker"></a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<script>
+			getData();
+			getKeys();
+			if (gerrors == true) {
+				run(main_key);
+			}
+		</script>
+	</body>
+	<!-- <https://ar.to/> -->
+	<footer>
+		<p>
+			All
+			<a href="https://github.com/septembersend.github.io"
+				title="source code repository for septembersend.github.io">
+				materials
+			</a>
+			on this website are released into the
+			<a href="https://creativecommons.org/publicdomain/zero/1.0/">plublic domain</a>.
+		</p>
+	</footer>
+</html>
+<!-- vim: shiftwidth=2 tabstop=2 foldmethod=marker foldmarker={{{,}}}
