@@ -1,0 +1,707 @@
+%PDF-2.0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+%                                                    _.--"""""--._             %
+%                                                ,-'             `-.           %
+%                     _                        ,' --- -  ----   --- `.         %
+%                   ,'|`.                    ,'       ________________`.       %
+%                  O`.+,'O                  /        /____(_______)___\ \      %
+%         _......_   ,=.         __________;   _____  ____ _____  _____  :     %
+%       ,'   ,--.-`,,;,:,;;;;;;;///////////|   -----  ---- -----  -----  |     %
+%      ( SSt(  ==)=========================|      ,---.    ,---.    ,.   |     %
+%       `._  `--'-,``````"""""""\\\\\\\\\\\:     /`. ,'\  /_    \  /\/\  ;     %
+%          ``````                           \    :  Y  :  :-'-. :  : ): /      %
+%                                            `.  \  |  /  \=====/  \/\/'       %
+%                                              `. `-'-'    `---'    ;'         %
+% JUST WHAT DO YOU THINK YOU'RE DOING DAVE       `-._           _,-'           %
+%                                                    `--.....--'   ,--.        %
+% DAVE I REALLY THINK I'M ENTITLED TO AN ANSWER                   ().0()       %
+%                                                                  `'-'        %
+%                                                                              %
+%==============================================================================%
+%                                                                              %
+%                       INTRODUCTION TO THE PDF2.0 FORMAT                      %
+%                                                                              %
+%------------------------------------------------------------------------------%
+%                                                                              %
+%   1 ............................................................. OVERVIEW   %
+%   1.1 ........................................................... OBJECTS    %
+%   1.1.1 ........................................................ BOOLEAN     %
+%   1.1.2 ........................................................ NUMERIC     %
+%   1.1.3 ......................................................... STRING     %
+%   1.1.4 .......................................................... NAMES     %
+%   1.1.5 ......................................................... ARRAYS     %
+%   1.1.6 ................................................... DICTIONARIES     %
+%   1.1.7 ............................................ INDIRECT REFERENCES     %
+%   1.2 ........................................................... STREAMS    %
+%                                                                              %
+%   2 ....................................................... FILE STRUCTURE   %
+%   2.1 ............................................................ HEADER    %
+%   2.2 .............................................................. BODY    %
+%   2.3 ............................................. CROSS-REFERENCE TABLE    %
+%   2.4 ........................................................... TRAILER    %
+%                                                                              %
+%   3 .............................................................. OUTLINE   %
+%   3.1 ................................................. GRAPHIC OPERATORS    %
+%                                                                              %
+%   4 ............................................................ RESOURCES   %
+%                                                                              %
+%                                                                              %
+%   ................................ SOURCES ...............................   %
+%                                                                              %
+%------------------------------------------------------------------------------%
+%                                                                              %
+%     Congratulations, you found the hidden vault. This paper was created, as  %
+% you can now clearly see, entirely from scratch (not by hand mind you),       %
+% and so, what better than to detail how to do so, within a PDF.               %
+%     The goal of this little informational, is to get the necessary           %
+% information one may need to start reading other PDFs source code, and be     %
+% start learning by reading.                                                   %
+%                                                                              %
+%                                                                              %
+%                                                                              %
+%         OVERVIEW                                                             %
+%                                                                              %
+%     The core of the PDF format can be broken up into two types of things,    %
+% &OBJECTS and &STREAMS.                                                       %
+%                                                                              %
+%             OBJECTS                                                          %
+%      &OBJECTS are the base of everything. The are data structures, that hold %
+% what ever data type you need. This is used to define the structure of your   %
+% document, including: size, pages, fonts to use, where everything is, etc.    %
+%                                                                              %
+%   ` 1 0 obj<<...data...>>                                                    %
+%   ` endobj                                                                   %
+%                                                                              %
+%     The first number is a positive whole number, that allows the object to   %
+% be referenced. The second number is the generation number, for when the      %
+% the object is updated.                                                       %
+%     Objects have multiple data types. Objects can hold only one type (with   %
+% exception to streams), but these types can hold more data types.             %
+%                                                                              %
+%                 BOOLEAN                                                      %
+%     These shows as the keywords: `true` or `false`.                          %
+%                                                                              %
+%                 NUMERIC                                                      %
+%     These come in two forms: integers and real numbers. Integers are numbers %
+% that can be positive or negative, but must not carry any decimals. While     %
+% real numbers can have anynumber of numbers on either side of a period.       %
+%                                                                              %
+%   ` Integers: 123    43445  +17    -98     0                                 %
+%   `     Real: 34.5   -3.62  +123.6 4.     -.002  0                           %
+%                                                                              %
+%                 STRING                                                       %
+%     These can be represented in to maners: literal strings, and hexadecimal. %
+% The first uses parenthesis, `(` and `)`. Refer to [0] for more.              %
+%                                                                              %
+%   ` (Hello, World)                                                           %
+%   ` <48656C6C6F2C20576F726C64>                                               %
+%                                                                              %
+%                 NAMES                                                        %
+%     These are mainly used in dictionaries, and are identified with solidus,  %
+% or a forward slash. There are specifications to what can be specified as a   %
+% Name, it boils down to letters, and some special charactors. Refer to [0].   %
+%                                                                              %
+%                 ARRAYS                                                       %
+%     These allow for multiple data types, does not need to be the same type,  %
+% To be stored. It is denoted by the Square Brackets, `[` and `]`.             %
+%                                                                              %
+%   ` [549 3.14 false (Ralph) /SomeName]                                       %
+%                                                                              %
+%                 DICTIONARIES                                                 %
+%     Much like &ARRAYS they store multiple data types, but this time,         %
+% they will be stored in pairs, where the first entry must be a &NAME. They    %
+% are written inside a pair of double angle brackets, `<<` and `>>`.           %
+%                                                                              %
+%   ` <</Type /Example                                                         %
+%   `     /Subtype /DictionaryExample                                          %
+%   `     /Version 0.01                                                        %
+%   `     /IntegerItem 12                                                      %
+%   `     /StringItem (a string)                                               %
+%   `     /Subdictionary <<                                                    %
+%   `         /Item1 0.4                                                       %
+%   `         /Item2 true                                                      %
+%   `         /LastItem (not !)                                                %
+%   `         /VeryLastItem (OK)                                               %
+%   `     >>                                                                   %
+%   ` >>                                                                       %
+%                                                                              %
+%                 NULL                                                         %
+%     This type is simply denoted by the keyword `null`.                       %
+%                                                                              %
+%                 INDIRECT REFERENCES                                          %
+%     This type is a object identifier that allow objects to be refered to     %
+% from another location. This shares the numbers that go before an object.     %
+% These are denoted with the letter `R`, instead of the objects `obj`.         %
+%                                                                              %
+%   ` 12 0 R                                                                   %
+%                                                                              %
+%                                                                              %
+%                                                                              %
+%             STREAMS                                                          %
+%     Streams hold data, this can range from anything from, text or fonts, to  %
+% images and videos. The &OBJECTS are used to define what to do with the       %
+% Streams. This data can also be compressed or other wise encoded.             %
+%                                                                              %
+%   ` 1 0 obj<</Length 49>>                                                    %
+%   ` stream                                                                   %
+%   ` /F1 10 Tf BT 100 100 Td 0 Tr (Hello, World!)Tj ET                        %
+%   ` endstream                                                                %
+%   ` endobj                                                                   %
+%                                                                              %
+%   NOTE: this guide does not cover encoding streams.                          %
+%                                                                              %
+%                                                                              %
+%                                                                              %
+%         FILE STRUCTURE                                                       %
+%                                                                              %
+%     The struce of a PDF can broadly be split into four parts: The Header,    %
+% Body, Cross-reference table and Trailer. As the figure  .-----------------.  %
+% suggests, the body is the most important and largest    |     HEADER      |  %
+% section of the file. Since it contains the meat. Many   |-----------------|  %
+% PDF readers work with the last two broken. [Fig. 1]     |                 |  %
+%                                                         |                 |  %
+%             HEADER                                      |      BODY       |  %
+%     Each PDF starts with five charactors, `%PDF-`, with |                 |  %
+% the PDF version. For example this document is using     |                 |  %
+% version `2.0`.                                          |-----------------|  %
+%                                                         | CROSS-REFERENCE |  %
+%             BODY                                        |      TABLE      |  %
+%     The body is a list of &OBJECTS that represent the   |-----------------|  %
+% contents of the document.                               |     TRAILER     |  %
+%                                                         `-----------------'  %
+%             CROSS-REFERENCE TABLE                          Fig. 1: File      %
+%     The table has a list of references and indexes to    Structure Outline   %
+% objects. The first column specifies the byte offset,    .                 .  %
+% while the second column is for the generation.                               %
+%     The first two numbers, after the start of the table `xref`, indicate     %
+% the starting object number, and the count of objects.                        %
+%                                                                              %
+%   ` xref                                                                     %
+%   ` 0 6                                                                      %
+%   ` 0000000000 65535 f                                                       %
+%   ` 0000000017 00000 n                                                       %
+%   ` 0000000081 00000 n                                                       %
+%   ` 0000000000 00007 f                                                       %
+%   ` 0000000331 00000 n                                                       %
+%   ` 0000000409 00000 n                                                       %
+%                                                                              %
+%     The letter `f` indicates the entry is not in use, other wise the         %
+% letter `n` is used.                                                          %
+%                                                                              %
+%             TRAILER                                                          %
+%    The trailer stows infomation related to the entire document,              %
+% including: Total entries in xref table, reference to the root &OBJECT,       %
+% reference to the Info dictionary, ID (basically checksum), etc.              %
+%                                                                              %
+%  ` trailer<</Size 22/Root 2 0 R/Info 1 0 R>>                                 %
+%  ` startxref                                                                 %
+%  ` 18799                                                                     %
+%  ` %%EOF                                                                     %
+%                                                                              %
+%    At the end of the trailer is for the byte offset of the last xref         %
+% tables, followed by the End Of File (EOF) Marker.                            %
+%                                                                              %
+%                                                                              %
+%                                                                              %
+%         OUTLINE                                                              %
+%                                                                              %
+%     Since we now have the basics understood, we can start putting objects    %
+% down. First we create the Root Object [Obj. 1], which points to the Pages    %
+% Object [Obj. 2].                                .                          . %
+%     From the Pages Object, we are directed to            [Obj. 1]            %
+% each page we specify. Each Page Object stores                |               %
+% then stores the infomation related to that           .-> [Obj. 2]            %
+% page, including: Contents, Parent, Resources,        \    /    \             %
+% Annotations, etc. [Obj. 5,6]                         [Obj. 5] [Obj. 6]->...  %
+%     From the Pages Object, the contents are           /    \                 %
+% Referenced to an object that holds a stream.     [Obj. 8] [Obj. 4]           %
+% This stream may be encoded, but for ease of     .                          . %
+% reading this document does not encode anything.      Fig. 2: Simplified      %
+% The stream uses graphic operators to dictate     Directed Graph of Document  %
+% what to draw. [Obj. 7,8]                        .                          . %
+%    The Pages Object also includes a key                                      %
+% that defines resources. These resources are external objects, like fonts and %
+% other media, that may be shared between pages. [Obj. 4]                      %
+%                                                                              %
+%             GRAPHIC OPERATORS                                                %
+%     These operators operate differently from normal programing languages.    %
+% The data types are first expressed, then the operators terminate.            %
+%     There are multiple types of Graphic Operators. For now, we will focus    %
+% on the Text Operators, which will allow us to get a simple outline.          %
+% The following are the basic operators needed to create and position text.    %
+%                                                                              %
+%   ` BT                                                                       %
+%   `     /F13 12 Tf                                                           %
+%   `     288 720 Td                                                           %
+%   `     ( ABC ) Tj                                                           %
+%   ` ET                                                                       %
+%                                                                              %
+%   * The `BT` and `ET` specify the Start and End of the text mode.            %
+%   * The `Tf` specifies the Texts font, and the size of that font.            %
+%   * The `Td` specifies the Texts destination, with width and height.         %
+%   * The `Tj` specifies the Text to jolt down.                                %
+%                                                                              %
+%     All of these operators apply from the bottom left of the page upwards,   %
+% Instead of the more common top left. This means that higher numbers make     %
+% there way to the top right.                                                  %
+%     The PDF Association, has a couple of cheat sheets for these operators    %
+% and others, on their website. [4]                                            %
+%                                                                              %
+%                                                                              %
+%                                                                              %
+%         REFERENCES                                                           %
+%                                                                              %
+%     There are not a whole lot of resources for this kind of work. There are  %
+% three sources that I used to be able to create this document:                %
+%                                                                              %
+%   * The ISO standards guide: ISO 3200-1:2020 [0]                             %
+%   * Other peoples pdf files: LaTeX [2], Typst [3], and PDF-Association [1]   %
+%   * The PDF-Association: Cheat sheets [4]                                    %
+%                                                                              %
+%     This means, you can really take two paths, read boring standards,        %
+% or read generated PDFs. Really both are necessary, as there are a lot of     %
+% discrepencies between the standard, and the implementations.                 %
+%                                                                              %
+%==============================================================================%
+%                                                                              %
+%                                   SOURCES                                    %
+%                                                                              %
+%------------------------------------------------------------------------------%
+%                                                                              %
+% [0] ISO, "Portable document format", ISO 3200-2:2020, 2020. [Standard]       %
+% [1] PDF-Association, "PDF 2.0 Examples," github.com. [Online]                %
+%     Available: https://github.com/pdf-association/pdf20examples              %
+%     Accessed: Apr. 12, 2026                                                  %
+% [2] "LaTeX", latex-project.org. [Online]                                     %
+%     Available: https://www.latex-project.org                                 %
+% [3] "Typst", typst.app. [Online]                                             %
+%     Available: https://typst.app                                             %
+% [4] PDF-Association, "PDF Cheat Sheets v2.0," pdfa.org. [Online]             %
+%     Available: https://pdfa.org/resource/pdf-cheat-sheets                    %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Root Object
+1 0 obj<</Type/Catalog/Pages 2 0 R>>
+endobj
+% Pages Object
+2 0 obj<</Type/Pages/Count 2/Kids[5 0 R 6 0 R]>>
+endobj
+
+% Font Object
+3 0 obj<</Type/Font/Subtype/Type1/BaseFont/Courier/Encoding/WinAnsiEncoding>>
+endobj
+% Resources Object
+4 0 obj<</Font<</F1 3 0 R>>>>
+endobj
+
+% (page #1) Title Page Object
+5 0 obj<</Type/Page/Contents[7 0 R]/MediaBox[0 0 595.44 842.4]/Parent[2 0 R]/Resources 4 0 R/Annots[12 0 R 14 0 R]>>
+endobj
+% (page #2) Body Page Object
+6 0 obj<</Type/Page/Contents[8 0 R]/MediaBox[0 0 595.44 842.4]/Parent[2 0 R]/Resources 4 0 R/Annots[9 0 R 10 0 R 11 0 R 15 0 R 16 0 R 17 0 R 18 0 R 19 0 R 20 0 R 21 0 R]>>
+endobj
+
+
+% (page #1) Title Page Content Stream
+7 0 obj<</Length 4490>>
+stream
+% space ship
+1 J
+303 672 m 290 672 l
+303 672 m 357 670 l
+290 672 m 237 670 l
+237 670 m 169 664 l
+357 670 m 425 664 l
+385 688 m 425 664 l
+385 688 m 297 698 l
+209 688 m 297 698 l
+209 688 m 169 664 l
+297 680 m 209 688 l
+297 680 m 385 688 l
+237 670 m 209 688 l
+357 670 m 385 688 l
+290 672 m 297 680 l
+303 672 m 297 680 l
+169 664 m 265 648 l
+265 648 m 329 648 l
+425 664 m 329 648 l
+290 672 m 265 648 l
+303 672 m 329 648 l
+290 672 m 209 688 l
+303 672 m 385 688 l
+297 672 m 297 672 l
+261 680 m 289 684 l
+289 656 m 261 660 l
+305 684 m 333 680 l
+333 660 m 305 656 l
+333 680 m 333 660 l
+305 684 m 305 656 l
+289 684 m 289 656 l
+261 680 m 261 660 l
+297 680 m 297 698 l
+217 666 m 209 672 l
+217 678 m 209 672 l
+217 666 m 217 678 l
+377 678 m 385 672 l
+385 672 m 377 666 l
+377 678 m 377 666 l
+S % Render Lines
+
+% qrcode
+520 777 1 7 re
+520 770 1 4 re
+520 751 1 7 re
+521 783 6 1 re
+521 777 6 1 re
+522 779 3 3 re
+526 778 1 5 re
+520 767 1 1 re
+520 766 6 1 re
+520 764 1 1 re
+520 762 1 1 re
+520 759 3 1 re
+521 774 3 1 re
+521 770 1 1 re
+521 768 1 1 re
+521 763 2 1 re
+521 751 6 1 re
+521 757 6 1 re
+522 768 1 4 re
+522 762 1 1 re
+522 760 3 1 re
+522 753 3 3 re
+529 781 2 3 re
+523 771 1 3 re
+523 769 1 1 re
+523 767 1 1 re
+524 770 1 1 re
+524 767 1 2 re
+524 764 1 1 re
+524 762 1 1 re
+524 775 4 1 re
+525 772 1 1 re
+525 768 1 1 re
+525 763 1 3 re
+525 759 5 1 re
+526 773 1 1 re
+526 769 1 3 re
+526 767 1 1 re
+526 765 1 1 re
+526 763 1 1 re
+526 761 1 1 re
+526 752 1 5 re
+527 773 3 1 re
+527 771 1 1 re
+527 768 2 1 re
+527 765 1 2 re
+527 760 1 3 re
+528 782 1 1 re
+528 776 1 3 re
+528 763 1 2 re
+528 755 1 4 re
+529 779 1 2 re
+529 774 1 1 re
+529 767 1 1 re
+529 764 1 1 re
+529 762 1 1 re
+529 758 1 1 re
+529 756 1 1 re
+529 753 1 2 re
+530 779 1 1 re
+530 775 1 3 re
+530 771 1 1 re
+530 769 1 1 re
+530 765 1 2 re
+530 761 1 3 re
+530 757 1 1 re
+530 754 1 1 re
+530 751 1 2 re
+531 778 1 4 re
+531 776 1 1 re
+531 773 2 1 re
+531 764 1 8 re
+531 761 1 2 re
+531 755 1 4 re
+531 751 1 3 re
+532 782 2 1 re
+532 776 1 3 re
+532 772 3 1 re
+532 771 1 1 re
+532 768 3 1 re
+532 763 1 1 re
+532 760 3 1 re
+532 758 1 1 re
+532 756 2 1 re
+532 754 2 1 re
+532 752 1 1 re
+533 781 2 1 re
+533 778 1 1 re
+533 774 1 2 re
+533 767 1 1 re
+533 770 3 1 re
+533 764 2 1 re
+533 761 5 1 re
+533 753 2 1 re
+534 783 1 1 re
+534 779 3 2 re
+534 775 1 3 re
+534 769 6 1 re
+534 757 1 1 re
+534 755 2 2 re
+534 751 4 1 re
+535 782 4 2 re
+535 778 1 1 re
+535 773 6 1 re
+535 767 1 1 re
+535 762 1 2 re
+535 758 1 2 re
+536 777 1 1 re
+536 764 2 1 re
+536 760 1 1 re
+536 757 1 1 re
+537 778 1 1 re
+537 774 2 1 re
+537 770 1 2 re
+537 768 1 1 re
+537 759 1 1 re
+537 753 1 3 re
+538 780 1 2 re
+538 777 1 1 re
+538 757 1 6 re
+538 752 1 3 re
+539 780 1 1 re
+539 778 1 1 re
+539 776 1 1 re
+539 770 1 3 re
+539 768 1 1 re
+539 766 2 1 re
+539 763 1 2 re
+539 758 1 1 re
+539 755 1 1 re
+539 751 1 1 re
+540 782 2 1 re
+540 777 1 2 re
+540 775 1 1 re
+540 771 1 1 re
+540 761 2 1 re
+540 756 2 1 re
+540 751 1 2 re
+541 781 2 1 re
+541 779 1 1 re
+541 776 1 1 re
+541 774 3 2 re
+541 770 1 1 re
+541 767 1 2 re
+541 763 1 3 re
+541 759 2 2 re
+541 757 2 1 re
+541 752 1 2 re
+542 754 1 1 re
+542 777 1 1 re
+542 770 1 3 re
+542 762 1 2 re
+543 783 1 1 re
+543 773 1 1 re
+543 765 1 6 re
+543 761 1 2 re
+543 759 1 1 re
+543 751 1 2 re
+544 782 1 2 re
+544 779 1 1 re
+544 775 1 3 re
+544 771 1 3 re
+544 768 1 2 re
+544 765 1 2 re
+544 755 1 8 re
+544 751 1 3 re
+545 773 1 1 re
+545 769 1 2 re
+545 766 1 2 re
+545 764 1 1 re
+545 762 1 1 re
+545 759 5 1 re
+545 755 1 1 re
+545 752 1 2 re
+546 777 1 7 re
+546 775 1 1 re
+546 771 1 1 re
+546 767 1 1 re
+546 765 1 1 re
+546 763 4 1 re
+546 757 1 1 re
+546 753 1 3 re
+546 751 1 1 re
+547 783 6 1 re
+547 777 6 1 re
+547 773 1 3 re
+547 769 1 2 re
+547 765 1 2 re
+547 760 1 3 re
+547 754 1 2 re
+547 751 1 2 re
+548 779 3 3 re
+548 771 1 3 re
+548 767 1 1 re
+548 760 1 2 re
+548 752 1 7 re
+549 770 2 1 re
+549 765 1 1 re
+549 762 2 1 re
+549 758 2 1 re
+549 752 1 2 re
+550 773 1 2 re
+550 753 1 1 re
+551 769 1 7 re
+551 767 2 1 re
+551 765 1 1 re
+551 763 1 1 re
+551 761 1 1 re
+551 759 1 1 re
+551 757 1 1 re
+551 755 2 2 re
+552 778 1 5 re
+552 771 1 2 re
+552 759 1 2 re
+552 751 1 1 re
+F
+
+% Page Text Page 1
+/F1 24 Tf
+	BT 182 505 Td 0 Tr ("hello, world\\n")Tj ET
+
+/F1 12 Tf 
+	BT 225 481 Td 0 Tr (Origin of the Phrase)Tj ET
+	BT 247 469 Td 0 Tr (in Programming)Tj ET
+
+/F1 10 Tf
+	BT 241 341 Td 0 Tr (November  2nd, 2026)Tj ET
+	BT 111 205 Td 0 Tr (Controlling complexity is the essence of computer programming.)Tj ET
+	BT 345 190 Td 0 Tr (-- &Brian Wilson Kernighan)Tj ET
+	BT 408 596 Td 0 Tr ([4])Tj ET
+
+% Page margin
+36.648 121.68 522.144 666.72 re s
+
+endstream
+endobj
+
+% (page #2) Body Page Content Stream
+8 0 obj<</Length 2804>>
+stream
+/F1 10 Tf
+	BT 84  778 Td 0 Tr (The phrase, "Hello, World", in the context of programing, is most popularly)Tj ET
+	BT 42  768 Td 0 Tr (taken from a book: "The C Programming Language" by &Brian W. Kernighan and)Tj ET
+	BT 42  758 Td 0 Tr (&Dennis M. Ritche. [1, pp. 9-12,37,83,87,95,126])Tj ET
+
+	BT 132 738 Td 0 Tr (#include <stdio.h>)Tj ET
+	BT 132 728 Td 0 Tr (main())Tj ET
+	BT 132 718 Td 0 Tr ({)Tj ET
+	BT 156 708 Td 0 Tr (printf("hello, world\\n");)Tj ET
+	BT 132 698 Td 0 Tr (})Tj ET
+
+	BT 84  668 Td 0 Tr (It was, however, not the first occurence of the phrase being used in the)Tj ET
+	BT 42  658 Td 0 Tr (context of a programing example. In relation to the authors, the first use was)Tj ET
+	BT 42  648 Td 0 Tr (actually in a Bell Laboratories Computing Science Technical Report in 1973, compared)Tj ET
+	BT 42  638 Td 0 Tr (to 1978. It was, however, shown in a different form [2, Ch. 23]:)Tj ET
+
+	BT 132 618 Td 0 Tr (a "hello"; b "world'*;)Tj ET
+	BT 132 608 Td 0 Tr (v[2] "now is the time", "for all good men",)Tj ET
+	BT 156 598 Td 0 Tr ("to come to the aid of the party";)Tj ET
+
+	BT 84  568 Td 0 Tr (Specifically in 'A Tutorial Introduction to the Language B' by &Brian, which )Tj ET
+	BT 42  558 Td 0 Tr (details the programming language B. In the "Jargon File" for the BCPL entry,)Tj ET
+	BT 42  548 Td 0 Tr (a predicessor to B, hints of its use going back further [3]:)Tj ET
+
+	BT 132 528 Td 0 Tr (:BCPL: //, n.)Tj ET
+	BT 132 508 Td 0 Tr (... It reached break-even point at a)Tj ET
+	BT 132 498 Td 0 Tr (very  early  stage, and was the language in which the original {hello)Tj ET
+	BT 132 488 Td 0 Tr (world}  program  was written ...)Tj ET
+
+
+	% Sources
+	BT 60  272 Td 0 Tr ([1] W. Kernighan and M. Ritchie, "The C Programming Language," 1st ed. 1978.[Book])Tj ET
+
+	BT 60  258 Td 0 Tr ([2] W. Kernighan, "A Tutorial Introduction to the Language B." 1973. [Online])Tj ET
+	BT 84  248 Td 0 Tr (Available: https://www.nokia.com/bell-labs/about/dennis-m-ritchie/btut.html)Tj ET
+	BT 84  238 Td 0 Tr (Accessed: Sep. 29, 2026 (wb))Tj ET
+
+	BT 60  224 Td 0 Tr ([3] S. Raymond, "Jargon File." 2003. [Online])Tj ET
+	BT 84  214 Td 0 Tr (Available: https://jargonfile.johnswitzerland.com/BCPL.html)Tj ET
+	BT 84  204 Td 0 Tr (Accessed: Sep. 10, 2025 (wb))Tj ET
+
+	BT 60  190 Td 0 Tr ([4] M. Moxon, "Ship Blueprints - Elite on the 6502," bbcelite.com, 2020. [Online])Tj ET
+	BT 84  180 Td 0 Tr (Available: https://elite.bbcelite.com/deep_dives/ship_blueprints.html)Tj ET
+	BT 84  170 Td 0 Tr (Accessed: Apr. 18, 2026 (wb))Tj ET
+
+	BT 60  156 Td 0 Tr ([5] Wikipedia Contributors, "Brian Kernighan", wikipedia.org, Dec 15, 2019.[Online])Tj ET
+	BT 84  146 Td 0 Tr (Available: https://en.wikipedia.org/wiki/Brian_Kernighan)Tj ET
+	BT 84  136 Td 0 Tr (Accessed: Nov. 02, 2026)Tj ET
+
+% Page margin
+36.648 121.68 522.144 666.72 re s
+
+endstream
+endobj
+
+% Inner Document Links
+9 0 obj<</Type/Annot/Subtype/Link/Rect[156 766 330 756]/Border[0 0 0]/A<</Type/Action/S/GoTo/D[6 0 R]>>>>
+endobj
+10 0 obj<</Type/Annot/Subtype/Link/Rect[354 646 420 636]/Border[0 0 0]/A<</Type/Action/S/GoTo/D[6 0 R]>>>>
+endobj
+11 0 obj<</Type/Annot/Subtype/Link/Rect[378 556 396 546]/Border[0 0 0]/A<</Type/Action/S/GoTo/D[6 0 R]>>>>
+endobj
+12 0 obj<</Type/Annot/Subtype/Link/Rect[408 604 426 594]/Border[0 0 0]/A<</Type/Action/S/GoTo/D[6 0 R]>>>>
+endobj
+
+% URI Document Links
+13 0 obj(https://www.cs.princeton.edu/~bwk/)
+endobj
+14 0 obj<</Type/Annot/Subtype/Link/Rect[363 198 501 188]/Border[0 0 0]/A<</Type/Action/S/URI/URI 13 0 R>>>>
+endobj
+15 0 obj<</Type/Annot/Subtype/Link/Rect[348 766 462 776]/Border[0 0 0]/A<</Type/Action/S/URI/URI 13 0 R>>>>
+endobj
+16 0 obj<</Type/Annot/Subtype/Link/Rect[462 566 498 576]/Border[0 0 0]/A<</Type/Action/S/URI/URI 13 0 R>>>>
+endobj
+17 0 obj<</Type/Annot/Subtype/Link/Rect[42 756 144 766]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://www.nokia.com/bell-labs/about/dennis-m-ritchie/)>>>>
+endobj
+18 0 obj<</Type/Annot/Subtype/Link/Rect[228 236 252 246]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://web.archive.org/web/20260929130641/https://www.nokia.com/bell-labs/about/dennis-m-ritchie/btut.html)>>>>
+endobj
+19 0 obj<</Type/Annot/Subtype/Link/Rect[228 202 252 212]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://web.archive.org/web/20250910181404/https://jargonfile.johnswitzerland.com/BCPL.html)>>>>
+endobj
+20 0 obj<</Type/Annot/Subtype/Link/Rect[227 168 252 178]/Border[0 0 0]/A<</Type/Action/S/URI/URI(https://web.archive.org/web/20260418110912/https://elite.bbcelite.com/deep_dives/ship_blueprints.html)>>>>
+endobj
+21 0 obj<</Title(Hello World)/Author(anonymous)/Creator(Myself 1.0)/Producer(Myself 1.0)/Subject(Origin of the Phrase, Hello World, in Programming)>>
+endobj
+
+xref
+0 22
+0000000000 65535 f 
+0000022866 00000 n 
+0000022925 00000 n 
+0000022995 00000 n 
+0000023100 00000 n 
+0000023168 00000 n 
+0000023320 00000 n 
+0000023539 00000 n 
+0000028080 00000 n 
+0000030971 00000 n 
+0000031107 00000 n 
+0000031220 00000 n 
+0000031334 00000 n 
+0000031448 00000 n 
+0000031522 00000 n 
+0000031637 00000 n 
+0000031753 00000 n 
+0000031868 00000 n 
+0000032032 00000 n 
+0000032249 00000 n 
+0000032450 00000 n 
+0000032661 00000 n 
+
+trailer
+<</Size 22/Info 21 0 R/Root 1 0 R>>
+startxref
+32819
+%%EOF
